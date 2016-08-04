@@ -288,3 +288,54 @@ pyrad -p params.txt -s 7
 
 date
 ```
+####Intepreting output of each step####
+
+* Working in the stats folder following running step 3
+
+```bash
+less clust.85/SL_064.clustS.gz | head -n 26 | cut -c 1-80
+```
+output
+
+```bash
+>SL_064_36625_c1;size=12;
+TGCAGCTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTA---------------
+>SL_064_62653_c1;size=10;-
+-----CTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTACTGCA----------
+>SL_064_120291_c1;size=1;+
+TGCAGCTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGNACCGCTTCTA---------------
+>SL_064_94358_c1;size=1;+
+TGCAGNTGCTCTTACTTCTCTTACTGCCTCTCNTCCTACTGCTNTTATTGCTNGTACCGCTTCTA---------------
+>SL_064_193495_r1;size=1;-
+-------------NCTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTACTGCAGGAGGGATAG
+>SL_064_347515_c1;size=1;+
+TGCAGCTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTNTN---------------
+>SL_064_148282_c1;size=1;-
+-----CTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTNCTACTGCA----------
+>SL_064_279987_c1;size=1;-
+-----CTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTANCGNTTCTACTGCA----------
+>SL_064_238896_r1;size=1;-
+-------------ACTTCTCNTACNGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTACTGCAGGAGGGATAG
+>SL_064_222503_c1;size=1;+
+TGCAGCTGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTNTTGCTGGTACCGCTTCTA---------------
+>SL_064_50515_c1;size=1;+
+TGCAGCTGCTCTTACTTCTCTTACNGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTA---------------
+>SL_064_366636_c1;size=1;-
+-----CCGCTCTTACTTCTCTTACTGCCTCTCCTCCTACTGCTCTTATTGCTGGTACCGCTTCTACTGCA----------
+//
+//
+```
+
+* Each cluster is seperated by two rows of forward slashes. You can use this to visualize how much overlap there is between clusters. The number of reads in each cluster is your depth for that cluster. 
+
+* Review information about thte stats. This can show you how many reads were maintained with your thresholds, you could use this to decide if you want to change your clustering threshold (a bit unclear how, but ideally you want more under total). 
+
+```bash
+head -n 100 stats/s3.clusters.txt | column -t
+```
+```bash
+head -n 20 clust.85/SL_064.u | column -t
+```
+* This second command tells you if any reads need to be flipped, if they do keep the data type as GBS, otherwise change it to RAD.
+* Step four calculates stuff that will be used in step five. Not too much to look at here.
+* Step five creates a consensus sequence for each cluster, so each cluster only has one sequence read. I believe this means that your clusters are now contigs(?). You can look over the stats file generated in this step and see how many reads were reatined for the depth of coverage you desire. Also how many left after paralogs. 
